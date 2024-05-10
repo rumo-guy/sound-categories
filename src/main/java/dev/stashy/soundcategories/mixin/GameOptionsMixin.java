@@ -18,27 +18,21 @@ import java.util.function.BiFunction;
 @Mixin(GameOptions.class)
 public abstract class GameOptionsMixin
 {
-    @Shadow
-    @Final
-    private Object2FloatMap<SoundCategory> soundVolumeLevels;
-
-    @Redirect(at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2FloatMap;computeFloat(Ljava/lang/Object;Ljava/util/function/BiFunction;)F"), method = "accept")
-    private float removeComputeFloat(Object2FloatMap instance, Object key, BiFunction remappingFunction)
-    {
-        return 0;
-    }
-
-    @Inject(at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2FloatMap;computeFloat(Ljava/lang/Object;Ljava/util/function/BiFunction;)F"), method = "accept", locals = LocalCapture.CAPTURE_FAILHARD)
-    private void computeFloat(GameOptions.Visitor visitor, CallbackInfo ci, SoundCategory[] var2, int var3, int var4, SoundCategory soundCategory)
-    {
-        soundVolumeLevels.computeFloat(soundCategory, (category, currentLevel) -> visitor.visitFloat(
-                "soundCategory_" + category.getName(),
-                currentLevel != null ? currentLevel : SoundCategories.defaultLevels.getOrDefault(category, 1.0f)));
-    }
-
-    @Inject(at = @At(value = "HEAD"), method = "load")
-    private void preLoad(CallbackInfo ci)
-    {
-        soundVolumeLevels.putAll(SoundCategories.defaultLevels);
-    }
+//    @Shadow
+//    @Final
+//    private Object2FloatMap<SoundCategory> soundVolumeLevels;
+//
+//    @Inject(at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2FloatMap;computeFloat(Ljava/lang/Object;Ljava/util/function/BiFunction;)F"), method = "accept", locals = LocalCapture.CAPTURE_FAILHARD)
+//    private void computeFloat(GameOptions.Visitor visitor, CallbackInfo ci, SoundCategory[] var2, int var3, int var4, SoundCategory soundCategory)
+//    {
+//        soundVolumeLevels.computeFloat(soundCategory, (category, currentLevel) -> visitor.visitFloat(
+//                "soundCategory_" + category.getName(),
+//                currentLevel != null ? currentLevel : SoundCategories.defaultLevels.getOrDefault(category, 1.0f)));
+//    }
+//
+//    @Inject(at = @At(value = "HEAD"), method = "load")
+//    private void preLoad(CallbackInfo ci)
+//    {
+//        soundVolumeLevels.putAll(SoundCategories.defaultLevels);
+//    }
 }

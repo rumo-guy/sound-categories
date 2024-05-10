@@ -8,7 +8,7 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.Option;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundCategory;
 import org.jetbrains.annotations.Nullable;
@@ -27,32 +27,29 @@ public class SoundList extends ElementListWidget<SoundList.SoundEntry>
 
     public int addCategory(SoundCategory cat)
     {
-        return super.addEntry(SoundEntry.create(cat, this.width));
+        var option = this.client.options.getSoundVolumeOption(cat);
+        return this.addEntry(SoundEntry.create(this.client.options, this.width, option));
     }
 
-    public int addDoubleCategory(SoundCategory first, SoundCategory second)
+    public int addDoubleCategory(SoundCategory first, @Nullable SoundCategory second)
     {
-        return super.addEntry(SoundEntry.createDouble(first, second, this.width));
+        return super.addEntry(SoundEntry.createDouble(
+            this.client.options,
+            this.client.options.getSoundVolumeOption(first),
+            second != null ? this.client.options.getSoundVolumeOption(second) : null,
+            this.width
+        ));
     }
 
-    public int addOption(GameOptions o, Option w)
+    public int addOption(GameOptions o, SimpleOption<?> w)
     {
         return super.addEntry(SoundEntry.createOption(o, w, this.width));
     }
 
     public int addGroup(SoundCategory group, ButtonWidget.PressAction pressAction)
     {
-        return super.addEntry(SoundEntry.createGroup(group, this.width, pressAction));
-    }
-
-    public int getRowWidth()
-    {
-        return 400;
-    }
-
-    protected int getScrollbarPositionX()
-    {
-        return super.getScrollbarPositionX() + 32;
+        var option = this.client.options.getSoundVolumeOption(group);
+        return super.addEntry(SoundEntry.createGroup(this.client.options, option, this.width, pressAction));
     }
 
     @Environment(EnvType.CLIENT)
@@ -65,32 +62,31 @@ public class SoundList extends ElementListWidget<SoundList.SoundEntry>
             widgets = w;
         }
 
-        public static SoundEntry create(SoundCategory cat, int width)
+        public static SoundEntry create(GameOptions options, int width, SimpleOption<?> option)
         {
-            return new SoundEntry(List.of(
-                    new SoundSliderWidget(MinecraftClient.getInstance(), width / 2 - 155, 0, cat, 310)));
+            return new SoundEntry(List.of(option.createWidget(options, width / 2 - 155, 0, 310)));
         }
 
-        public static SoundEntry createDouble(SoundCategory first, @Nullable SoundCategory second, int width)
+        public static SoundEntry createDouble(GameOptions options, SimpleOption<?> first, @Nullable SimpleOption<?> second, int width)
         {
-            List<SoundSliderWidget> w = new ArrayList<>();
-            w.add(new SoundSliderWidget(MinecraftClient.getInstance(), width / 2 - 155, 0, first, 150));
+            List<ClickableWidget> w = new ArrayList<>();
+            w.add(first.createWidget(options, width / 2 - 155, 0, 150));
             if (second != null)
-                w.add(new SoundSliderWidget(MinecraftClient.getInstance(), width / 2 + 5, 0, second, 150));
+                w.add(second.createWidget(options, width / 2 + 5, 0, 150));
             return new SoundEntry(w);
         }
 
-        public static SoundEntry createOption(GameOptions o, Option w, int width)
+        public static SoundEntry createOption(GameOptions o, SimpleOption<?> w, int width)
         {
-            var b = w.createButton(o, width / 2 - 155, 0, 310);
+            var b = w.createWidget(o, width / 2 - 155, 0, 310);
             return new SoundEntry(List.of(b));
         }
 
-        public static SoundEntry createGroup(SoundCategory group, int width, ButtonWidget.PressAction pressAction)
+        public static SoundEntry createGroup(GameOptions options, SimpleOption<?> option, int width, ButtonWidget.PressAction pressAction)
         {
             return new SoundEntry(
                     List.of(
-                            new SoundSliderWidget(MinecraftClient.getInstance(), width / 2 - 155, 0, group, 285),
+                            option.createWidget(options, width / 2 - 155, 0, 285),
                             new TexturedButtonWidget(width / 2 + 135, 0, 20, 20, 0, 0, 20,
                                                      SoundCategories.SETTINGS_ICON, 20, 40, pressAction)
                     ));
@@ -110,7 +106,7 @@ public class SoundList extends ElementListWidget<SoundList.SoundEntry>
         public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta)
         {
             this.widgets.forEach((s) -> {
-                s.y = y;
+                s.setY(y);
                 s.render(matrices, mouseX, mouseY, tickDelta);
             });
         }
