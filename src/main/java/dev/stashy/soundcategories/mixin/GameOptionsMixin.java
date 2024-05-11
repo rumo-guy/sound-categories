@@ -3,6 +3,7 @@ package dev.stashy.soundcategories.mixin;
 import dev.stashy.soundcategories.SoundCategories;
 import it.unimi.dsi.fastutil.objects.Object2FloatMap;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.sound.SoundCategory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,15 +14,16 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.Map;
 import java.util.function.BiFunction;
 
 @Mixin(GameOptions.class)
 public abstract class GameOptionsMixin
 {
-//    @Shadow
-//    @Final
-//    private Object2FloatMap<SoundCategory> soundVolumeLevels;
-//
+    @Shadow
+    @Final
+    private Map<SoundCategory, SimpleOption<Double>> soundVolumeLevels;
+
 //    @Inject(at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2FloatMap;computeFloat(Ljava/lang/Object;Ljava/util/function/BiFunction;)F"), method = "accept", locals = LocalCapture.CAPTURE_FAILHARD)
 //    private void computeFloat(GameOptions.Visitor visitor, CallbackInfo ci, SoundCategory[] var2, int var3, int var4, SoundCategory soundCategory)
 //    {
