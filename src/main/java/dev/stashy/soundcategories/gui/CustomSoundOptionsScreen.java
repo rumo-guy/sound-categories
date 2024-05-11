@@ -1,17 +1,21 @@
 package dev.stashy.soundcategories.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.stashy.soundcategories.SoundCategories;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class CustomSoundOptionsScreen extends GameOptionsScreen
@@ -47,11 +51,11 @@ public class CustomSoundOptionsScreen extends GameOptionsScreen
         list.addOption(gameOptions, this.client.options.getDirectionalAudio());
     }
 
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+    public void render(DrawContext context, int mouseX, int mouseY, float tickDelta)
     {
-        this.renderBackground(matrices);
-        this.list.render(matrices, mouseX, mouseY, delta);
-        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 5, 16777215);
-        super.render(matrices, mouseX, mouseY, delta);
+        this.renderBackground(context);
+        this.list.render(context, mouseX, mouseY, tickDelta);
+        context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 5, 16777215);
+        super.render(context, mouseX, mouseY, tickDelta);
     }
 }

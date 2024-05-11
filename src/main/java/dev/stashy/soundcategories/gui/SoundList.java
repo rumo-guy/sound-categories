@@ -4,6 +4,7 @@ import dev.stashy.soundcategories.SoundCategories;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.*;
@@ -103,11 +104,11 @@ public class SoundList extends ElementListWidget<SoundList.SoundEntry>
         }
 
         @Override
-        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta)
+        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta)
         {
             this.widgets.forEach((s) -> {
                 s.setY(y);
-                s.render(matrices, mouseX, mouseY, tickDelta);
+                s.render(context, mouseX, mouseY, tickDelta);
             });
         }
     }

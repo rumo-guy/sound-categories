@@ -1,6 +1,7 @@
 package dev.stashy.soundcategories.mixin;
 
 import dev.stashy.soundcategories.CategoryLoader;
+import dev.stashy.soundcategories.CategoryLoader.Register;
 import dev.stashy.soundcategories.SoundCategories;
 import net.minecraft.sound.SoundCategory;
 import org.apache.logging.log4j.LogManager;

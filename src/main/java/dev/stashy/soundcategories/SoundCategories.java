@@ -6,7 +6,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import dev.stashy.soundcategories.CategoryLoader.Register;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
